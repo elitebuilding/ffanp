@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FFANP</title>
+<meta name="description" content="A charity organization working with communities to create positive change.">
+<meta name="keywords" content="charity, community, nonprofit, Uganda, donations">
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    text-decoration: none;
+}
+
+:root{
+    --bg:#f4f7fb;
+    --card:#ffffff;
+    --text:#172033;
+    --muted:#697386;
+    --primary:#1976d2;
+    --primary-dark:#125ca5;
+    --border:#e3e8ef;
+    --danger:#dc3545;
+    --shadow:0 10px 30px rgba(20,40,80,.08);
+}
+
+body{
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+}
+
+button,
+input,
+textarea,
+select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.hidden{
+    display:none!important;
+}
+
+/* =========================
+   APP
+========================= */
+
+.app{
+    min-height:100vh;
+}
+
+.topbar{
+    height:64px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 18px;
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:800;
+}
+
+.brand-icon{
+    width:38px;
+    height:38px;
+    border-radius:11px;
+    display:grid;
+    place-items:center;
+    color:#fff;
+    background:linear-gradient(135deg,#1976d2,#00a8ff);
+    font-size:20px;
+}
+
+.top-actions{
+    display:flex;
+    gap:8px;
+}
+
+.btn{
+    border:1px solid var(--border);
+    background:#fff;
+    color:var(--text);
+    border-radius:9px;
+    padding:9px 13px;
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn.primary{
+    background:var(--primary);
+    color:#fff;
+    border-color:var(--primary);
+}
+
+.btn.primary:hover{
+    background:var(--primary-dark);
+}
+
+.btn.danger{
+    color:#fff;
+    background:var(--danger);
+    border-color:var(--danger);
+}
+
+.btn.small{
+    padding:7px 10px;
+    font-size:13px;
+}
+
+
+/* =========================
+   V2 DESIGN / HEALTH / LIBRARY
+========================= */
+.design-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.design-card{border:1px solid var(--border);border-radius:14px;padding:14px;background:#fff}
+.design-card h3{margin-bottom:6px;font-size:14px}
+.design-card p{color:var(--muted);font-size:12px;line-height:1.5}
+.media-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;color:var(--muted);font-size:13px}
+.media-card{border:1px solid var(--border);border-radius:14px;overflow:hidden;background:#fff;display:flex;flex-direction:column;min-width:0}
+.media-card img{width:100%;height:170px;object-fit:cover;background:#f3f5f8;display:block}
+.media-info{padding:12px 12px 8px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.media-info strong{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.media-info small{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.media-card .btn{margin:0 12px 12px}
+.health-header{display:flex;justify-content:space-between;align-items:center;gap:20px}
+.health-list{display:grid;gap:10px;margin-top:18px}
+.health-item{display:flex;align-items:flex-start;gap:12px;padding:12px;border:1px solid var(--border);border-radius:12px}
+.health-item>span{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-weight:800;flex:0 0 24px}
+.health-item.ok>span{background:#e7f7ed;color:#15803d}
+.health-item.warn>span{background:#fff4df;color:#b45309}
+.health-item div{display:flex;flex-direction:column;gap:3px}
+.health-item small{color:var(--muted);line-height:1.4}
+.theme-card{cursor:pointer;text-align:left;transition:.2s}
+.theme-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(20,30,50,.08)}
+.theme-card>strong,.theme-card>span{display:block}
+.theme-card>span{font-size:11px;color:var(--muted);margin-top:3px}
+.theme-swatches{display:flex;gap:5px;margin-bottom:12px}
+.theme-swatches i{width:26px;height:26px;border-radius:8px;border:1px solid rgba(0,0,0,.08)}
+.range-value{float:right;font-weight:700;color:var(--primary)}
+@media(max-width:600px){.health-header{align-items:flex-start}.media-toolbar{align-items:flex-start;flex-direction:column}}
+.swatches{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.swatch{width:38px;height:38px;border-radius:10px;border:2px solid #fff;box-shadow:0 0 0 1px var(--border);cursor:pointer}
+.health-score{display:grid;grid-template-columns:120px 1fr;gap:18px;align-items:center}
+.score-ring{width:108px;height:108px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--primary) var(--score,80%),#e8edf4 0);position:relative}
+.score-ring:after{content:"";position:absolute;inset:9px;background:#fff;border-radius:50%}
+.score-ring strong{position:relative;z-index:1;font-size:25px}
+.check-list{display:grid;gap:8px}
+.check-item{display:flex;gap:8px;align-items:flex-start;border:1px solid var(--border);border-radius:10px;padding:10px;background:#fff;font-size:13px}
+.check-item.ok{border-color:#b9e4c7;background:#f5fff8}
+.check-item.warn{border-color:#f1d58a;background:#fffaf0}
+.check-item.bad{border-color:#efb4bc;background:#fff6f7}
+.template-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.template-card{border:1px solid var(--border);border-radius:13px;padding:14px;cursor:pointer;background:#fff}
+.template-card:hover{border-color:var(--primary);transform:translateY(-1px)}
+.template-preview{height:70px;border-radius:10px;margin-bottom:10px;background:linear-gradient(135deg,var(--template-a,#1976d2),var(--template-b,#0d47a1))}
+.library-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.library-item{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
+.library-item img{width:100%;height:90px;object-fit:cover;display:block}
+.library-item div{padding:8px;font-size:12px;font-weight:700}
+.code-area{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;min-height:180px}
+@media(max-width:900px){.design-grid,.template-grid{grid-template-columns:1fr}.library-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.library-grid{grid-template-columns:1fr}.health-score{grid-template-columns:1fr}.score-ring{margin:auto}.top-actions .btn:nth-child(2),.top-actions .btn:nth-child(3){display:none}}
+
+.workspace{
+    display:grid;
+    grid-template-columns:280px minmax(0,1fr) 360px;
+    min-height:calc(100vh - 64px);
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+    background:#fff;
+    border-right:1px solid var(--border);
+    padding:18px;
+    overflow:auto;
+}
+
+.sidebar-title{
+    font-size:12px;
+    font-weight:800;
+    color:var(--muted);
+    text-transform:uppercase;
+    margin:10px 0;
+    letter-spacing:.08em;
+}
+
+.project-list{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.project{
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:11px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+}
+
+.project:hover{
+    background:#f7faff;
+}
+
+.project.active{
+    border-color:var(--primary);
+    background:#eef7ff;
+}
+
+.project-name{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    font-size:14px;
+}
+
+.project-actions{
+    display:flex;
+    gap:4px;
+}
+
+.project-actions button{
+    border:0;
+    background:transparent;
+    padding:3px;
+}
+
+/* =========================
+   EDITOR
+========================= */
+
+.editor{
+    padding:22px;
+    overflow:auto;
+    min-width:0;
+}
+
+.editor-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.editor-head h1{
+    font-size:23px;
+}
+
+.editor-head p{
+    color:var(--muted);
+    font-size:13px;
+    margin-top:3px;
+}
+
+.tabs{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-bottom:16px;
+}
+
+.tab{
+    border:1px solid var(--border);
+    background:#fff;
+    border-radius:9px;
+    padding:9px 12px;
+    font-size:13px;
+}
+
+.tab.active{
+    background:var(--primary);
+    color:#fff;
+    border-color:var(--primary);
+}
+
+.panel{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:18px;
+    box-shadow:var(--shadow);
+    margin-bottom:15px;
+}
+
+.panel h2{
+    font-size:17px;
+    margin-bottom:5px;
+}
+
+.panel-desc{
+    color:var(--muted);
+    font-size:13px;
+    margin-bottom:18px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+label{
+    font-size:13px;
+    font-weight:700;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding:11px 12px;
+    outline:none;
+    background:#fff;
+    color:var(--text);
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(25,118,210,.08);
+}
+
+textarea{
+    min-height:110px;
+    resize:vertical;
+}
+
+.color-row{
+    display:grid;
+    grid-template-columns:1fr 80px;
+    gap:8px;
+}
+
+input[type="color"]{
+    height:42px;
+    padding:3px;
+}
+
+.image-upload{
+    border:2px dashed #d9e0e8;
+    border-radius:12px;
+    padding:16px;
+    text-align:center;
+}
+
+.image-preview{
+    width:100%;
+    max-height:180px;
+    object-fit:cover;
+    border-radius:10px;
+    margin-top:10px;
+}
+
+.section-item{
+    border:1px solid var(--border);
+    border-radius:11px;
+    padding:13px;
+    margin-bottom:10px;
+}
+
+.section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:10px;
+}
+
+.section-head strong{
+    font-size:14px;
+}
+
+.toggle{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+}
+
+/* =========================
+   PREVIEW
+========================= */
+
+.preview-area{
+    background:#e9edf3;
+    border-left:1px solid var(--border);
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+}
+
+.preview-toolbar{
+    height:55px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+}
+
+.preview-btn{
+    border:0;
+    background:#f2f4f7;
+    border-radius:8px;
+    padding:7px 10px;
+}
+
+.preview-btn.active{
+    background:#1976d2;
+    color:#fff;
+}
+
+.preview-wrap{
+    flex:1;
+    overflow:auto;
+    padding:25px;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+}
+
+.preview-device{
+    background:#fff;
+    width:100%;
+    min-height:700px;
+    box-shadow:0 15px 40px rgba(0,0,0,.15);
+    transition:.3s;
+    overflow:hidden;
+}
+
+.preview-device.mobile{
+    width:390px;
+    max-width:100%;
+    min-height:760px;
+    border-radius:25px;
+}
+
+.preview-device.tablet{
+    width:700px;
+    max-width:100%;
+}
+
+.preview-device.desktop{
+    width:100%;
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.empty{
+    padding:35px 15px;
+    text-align:center;
+    color:var(--muted);
+}
+
+.empty-icon{
+    font-size:40px;
+    margin-bottom:10px;
+}
+
+/* =========================
+   GENERATED WEBSITE
+========================= */
+
+.site{
+    --site-primary:#1976d2;
+    --site-secondary:#0d47a1;
+    --site-bg:#ffffff;
+    --site-text:#172033;
+    --site-muted:#667085;
+    font-family:Arial,sans-serif;
+    background:var(--site-bg);
+    color:var(--site-text);
+}
+
+.site *{
+    box-sizing:border-box;
+}
+
+.site img{
+    max-width:100%;
+}
+
+.site-container{
+    width:min(1120px,92%);
+    margin:auto;
+}
+
+.site-header{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(255,255,255,.96);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid #eee;
+}
+
+.site-nav{
+    min-height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.site-brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:800;
+    color:var(--site-text);
+}
+
+.site-logo{
+    width:42px;
+    height:42px;
+    object-fit:contain;
+    border-radius:9px;
+}
+
+.site-nav-links{
+    display:flex;
+    gap:20px;
+    align-items:center;
+}
+
+.site-nav-links a{
+    color:var(--site-text);
+    text-decoration:none;
+    font-size:14px;
+    font-weight:600;
+}
+
+.site-menu{
+    display:none;
+    border:0;
+    background:transparent;
+    font-size:25px;
+}
+
+.site-hero{
+    min-height:500px;
+    display:flex;
+    align-items:center;
+    background-size:cover;
+    background-position:center;
+    position:relative;
+}
+
+.site-hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(90deg,rgba(0,0,0,.72),rgba(0,0,0,.2));
+}
+
+.hero-content{
+    position:relative;
+    color:#fff;
+    max-width:700px;
+    padding:80px 0;
+}
+
+.hero-content h1{
+    font-size:clamp(34px,5vw,64px);
+    line-height:1.05;
+    margin-bottom:18px;
+}
+
+.hero-content p{
+    font-size:18px;
+    line-height:1.7;
+    opacity:.94;
+    margin-bottom:25px;
+}
+
+.site-btn{
+    display:inline-flex;
+    text-decoration:none;
+    border-radius:9px;
+    padding:13px 20px;
+    background:var(--site-primary);
+    color:#fff;
+    font-weight:700;
+}
+
+.site-section{
+    padding:75px 0;
+}
+
+.site-section.alt{
+    background:#f7f9fc;
+}
+
+.site-section-title{
+    text-align:center;
+    max-width:720px;
+    margin:0 auto 40px;
+}
+
+.site-section-title h2{
+    font-size:34px;
+    margin-bottom:10px;
+}
+
+.site-section-title p{
+    color:var(--site-muted);
+    line-height:1.7;
+}
+
+.about-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+    align-items:center;
+}
+
+.about-image{
+    width:100%;
+    max-height:430px;
+    object-fit:cover;
+    border-radius:18px;
+}
+
+.site-copy{
+    color:var(--site-muted);
+    line-height:1.8;
+    white-space:pre-line;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.card{
+    border:1px solid #e7ebf0;
+    background:#fff;
+    border-radius:15px;
+    overflow:hidden;
+}
+
+.card-image{
+    width:100%;
+    height:190px;
+    object-fit:cover;
+}
+
+.card-body{
+    padding:20px;
+}
+
+.card-body h3{
+    margin-bottom:9px;
+}
+
+.card-body p{
+    color:var(--site-muted);
+    line-height:1.6;
+    font-size:14px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.stat{
+    text-align:center;
+    padding:25px 15px;
+    background:#fff;
+    border:1px solid #e7ebf0;
+    border-radius:14px;
+}
+
+.stat strong{
+    display:block;
+    color:var(--site-primary);
+    font-size:34px;
+    margin-bottom:5px;
+}
+
+.stat span{
+    color:var(--site-muted);
+    font-size:14px;
+}
+
+.donation-box{
+    max-width:760px;
+    margin:auto;
+    text-align:center;
+    background:#fff;
+    border-radius:20px;
+    padding:35px;
+    box-shadow:0 10px 35px rgba(0,0,0,.08);
+}
+
+.donation-details{
+    margin:25px 0;
+    display:grid;
+    gap:8px;
+}
+
+.team-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.team-card{
+    text-align:center;
+    border:1px solid #e7ebf0;
+    border-radius:15px;
+    padding:20px;
+}
+
+.team-photo{
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    object-fit:cover;
+    margin-bottom:10px;
+}
+
+.contact-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px;
+}
+
+.contact-box{
+    background:#f7f9fc;
+    border-radius:15px;
+    padding:25px;
+}
+
+.contact-box div{
+    margin:12px 0;
+    color:var(--site-muted);
+}
+
+.site-footer{
+    background:#101828;
+    color:#fff;
+    padding:45px 0;
+}
+
+.footer-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr;
+    gap:30px;
+}
+
+.site-footer p,
+.site-footer a{
+    color:#b8c0cc;
+    line-height:1.7;
+}
+
+.site-footer a{
+    text-decoration:none;
+}
+
+@media(max-width:900px){
+    .workspace{
+        grid-template-columns:230px minmax(0,1fr);
+    }
+
+    .preview-area{
+        display:none;
+    }
+
+    .cards,
+    .team-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:700px){
+    .topbar{
+        padding:0 10px;
+    }
+
+    .top-actions .btn:not(.primary){
+        display:none;
+    }
+
+    .workspace{
+        display:block;
+    }
+
+    .sidebar{
+        border-right:0;
+        border-bottom:1px solid var(--border);
+        max-height:210px;
+    }
+
+    .editor{
+        padding:12px;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-group.full{
+        grid-column:auto;
+    }
+
+    .editor-head{
+        align-items:flex-start;
+    }
+
+    .cards,
+    .team-grid,
+    .about-grid,
+    .contact-grid,
+    .footer-grid{
+        grid-template-columns:1fr;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .site-nav-links{
+        display:none;
+    }
+
+    .site-menu{
+        display:block;
+    }
+
+    .site-hero{
+        min-height:550px;
+    }
+
+    .site-section{
+        padding:55px 0;
+    }
+}
+
+/* =========================
+   BUILDER ENHANCEMENTS
+========================= */
+body.dark-builder{
+    --bg:#0b1220;
+    --card:#111a2b;
+    --text:#edf3ff;
+    --muted:#9aa8bd;
+    --border:#26344a;
+}
+body.dark-builder .topbar,
+body.dark-builder .sidebar,
+body.dark-builder .panel,
+body.dark-builder .tab,
+body.dark-builder input,
+body.dark-builder textarea,
+body.dark-builder select{
+    background:#111a2b;
+    color:var(--text);
+}
+body.dark-builder .project:hover{background:#172238}
+body.dark-builder .project.active{background:#132844}
+body.dark-builder .preview-area{background:#080e18}
+body.dark-builder .preview-toolbar{background:#111a2b}
+.builder-search{margin-bottom:10px}
+.builder-search input{padding:10px 12px}
+.project-meta{font-size:11px;color:var(--muted);margin-top:3px}
+.status-dot{width:8px;height:8px;border-radius:50%;background:#2eae62;display:inline-block;margin-right:6px}
+.editor-tools{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.file-btn{display:inline-flex;align-items:center;justify-content:center}
+.image-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.image-actions .btn{font-size:12px}
+.progress-note{font-size:12px;color:var(--muted);margin-top:8px}
+.preview-fullscreen{
+    position:fixed!important;inset:0!important;z-index:3000!important;
+    width:100%!important;height:100%!important;background:#e9edf3;
+}
+.preview-fullscreen .preview-wrap{padding:35px}
+.mobile-nav-preview{
+    position:absolute!important;right:4%!important;top:70px!important;
+    background:#fff!important;padding:15px!important;border-radius:10px!important;
+    box-shadow:0 10px 30px rgba(0,0,0,.12)!important;
+    flex-direction:column!important;display:flex!important;
+}
+@media(max-width:700px){
+    .top-actions{gap:4px}
+    .top-actions .btn{padding:8px 9px;font-size:12px}
+    .editor-head{flex-direction:column}
+    .editor-tools{width:100%}
+    .sidebar{max-height:none}
+    .project-list{max-height:150px;overflow:auto}
+}
+
+a{
+    text-decoration: none;
+}
+
+
+/* Slick stories and responsive reading modal */
+.story-section{background:linear-gradient(180deg,#f7faff,#fff)}.story-grid{align-items:stretch}
+.story-card{border:1px solid #e7ecf4;box-shadow:0 10px 35px #10234410;transition:transform .25s,box-shadow .25s;display:flex;flex-direction:column}
+.story-card:hover{transform:translateY(-6px);box-shadow:0 20px 48px #10234422}.story-cover{height:220px;object-fit:cover}
+.story-placeholder{height:180px;display:grid;place-items:center;color:white;font-size:42px;background:linear-gradient(135deg,var(--site-primary),var(--site-secondary))}
+.story-card .card-body{display:flex;flex:1;flex-direction:column;align-items:flex-start}.story-kicker{font-size:10px;letter-spacing:.16em;font-weight:800;color:var(--site-primary);display:block;margin-bottom:9px}
+.story-card .card-body h3{font-size:20px;line-height:1.35}.story-card .card-body p{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:18px}
+.story-read{margin-top:auto;border:0;border-radius:999px;background:var(--site-primary);color:#fff;font-weight:750;padding:11px 16px;display:inline-flex;gap:16px;align-items:center;cursor:pointer;transition:transform .2s}
+.story-read:hover{transform:translateY(-2px)}.story-modal{position:fixed;inset:0;z-index:99999;background:#070e1cba;backdrop-filter:blur(8px);padding:22px;display:none;align-items:center;justify-content:center}
+.story-modal.is-open{display:flex;animation:storyFade .18s ease}.story-modal-panel{position:relative;width:min(760px,100%);max-height:88vh;overflow:auto;background:#fff;color:#172033;border-radius:22px;box-shadow:0 30px 100px #0005;animation:storyRise .24s ease}
+.story-modal-close{position:sticky;top:12px;float:right;margin:12px 12px -52px 0;width:40px;height:40px;border:0;border-radius:50%;background:#111827dd;color:#fff;font-size:28px;cursor:pointer;z-index:2}
+.story-modal-image{width:100%;max-height:350px;object-fit:cover;display:block}.story-modal-image[hidden]{display:none}.story-modal-content{padding:clamp(22px,5vw,42px)}
+.story-modal-content h2{font-size:clamp(26px,4vw,38px);line-height:1.15;margin-bottom:18px}.story-modal-text{white-space:pre-line;line-height:1.9;color:#536075;font-size:16px;overflow-wrap:anywhere}
+.story-modal-video video,.story-modal-video iframe{display:block;width:100%;max-height:420px;aspect-ratio:16/9;margin-top:22px;border:0;border-radius:12px;background:#080b12}.story-modal-video iframe{height:auto;min-height:220px}.story-modal-audio audio{display:block;width:100%;margin-top:18px}.story-modal-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:22px}.story-modal-gallery:empty{display:none}.story-modal-gallery img{display:block;width:100%;height:180px;object-fit:cover;border-radius:12px;background:#eef1f5}.story-modal-video:empty,.story-modal-audio:empty{display:none}body.story-modal-open{overflow:hidden}
+@keyframes storyFade{from{opacity:0}to{opacity:1}}@keyframes storyRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:700px){.story-modal{padding:10px;align-items:flex-end}.story-modal-panel{max-height:92vh;border-radius:20px 20px 12px 12px}.story-cover{height:200px}.story-modal-content{padding:24px 20px}.story-card:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){.story-card,.story-read,.story-modal-panel{animation:none;transition:none}}
+
+
+</style>
+</head>
+<body>
+
+
+    <style class="site-custom-css">
+        .site{font-family:var(--site-font,Inter,Segoe UI,Arial,sans-serif)}
+        .site-container{max-width:var(--site-container,1120px)}
+        .site-hero{position:relative;overflow:hidden}
+        .site-hero:before{content:"";position:absolute;inset:0;background:#000;opacity:var(--site-overlay,0);pointer-events:none}
+        .site-hero>.site-container{position:relative;z-index:1}
+        .site-card,.program-card,.project-card,.team-card,.news-card,.contact-box{border-radius:var(--site-radius,14px)}
+        .site-btn{border-radius:var(--site-radius,14px) !important}
+        
+    </style>
+
+    <div class="site"
+        style="
+        --site-primary:#19d23e;
+        --site-secondary:#a09b0d;
+        --site-bg:#ffffff;
+        --site-text:#172033;
+        --site-radius:14px;
+        --site-container:1120px;
+        --site-font:Inter, Segoe UI, Arial, sans-serif;
+        --site-overlay:0.16;
+        ">
+
+        <header class="site-header">
+
+            <div class="site-container site-nav">
+
+                <a href="#home" class="site-brand">
+
+                    <span style="
+                            width:42px;
+                            height:42px;
+                            display:grid;
+                            place-items:center;
+                            border-radius:9px;
+                            background:#19d23e;
+                            color:white;
+                            font-size:20px;
+                        ">❤</span>
+
+                    <span>FFANP</span>
+
+                </a>
+
+                <nav class="site-nav-links">
+
+                    <a href="#about">About</a>
+                    <a href="#programs">Programs</a>
+                    <a href="#projects">Projects</a>
+                    <a href="#donate">Donate</a>
+                    <a href="#news">News</a>
+                    <a href="#contact">Contact</a>
+
+                </nav>
+
+                <button class="site-menu">☰</button>
+
+            </div>
+
+        </header>
+
+        <section
+            id="home"
+            class="site-hero"
+            style="background:linear-gradient(135deg,#19d23e,#a09b0d)">
+
+            <div class="site-container">
+
+                <div class="hero-content">
+
+                    <h1>FFANP</h1>
+
+                    <p>Together We Can.</p>
+
+                    <a href="#donate" class="site-btn">
+                        Support Our Mission
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        
+        <section id="about" class="site-section">
+
+            <div class="site-container">
+
+                <div class="about-grid">
+
+                    <div>
+
+                        <div class="site-section-title" style="text-align:left;margin:0 0 20px">
+
+                            <h2>About Us</h2>
+
+                        </div>
+
+                        <p class="site-copy">
+                            Our organization works with communities, partners and volunteers to create sustainable solutions to real-world challenges.
+
+We believe every person deserves an opportunity to live with dignity, safety and hope.
+                        </p>
+
+                    </div>
+
+                    <div>
+
+                        <div style="
+                                min-height:300px;
+                                border-radius:18px;
+                                background:linear-gradient(135deg,#19d23e,#a09b0d);
+                                display:grid;
+                                place-items:center;
+                                color:white;
+                                font-size:50px;
+                            ">❤</div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        
+
+    <section id="programs" class="site-section alt">
+
+        <div class="site-container">
+
+            <div class="site-section-title">
+
+                <h2>Our Programs</h2>
+
+                <p>
+                    Programs designed to create meaningful and sustainable impact.
+                </p>
+
+            </div>
+
+            <div class="cards">
+
+                
+
+                    <article class="card">
+
+                        <div
+                                class="card-image"
+                                style="
+                                background:linear-gradient(135deg,
+                                #19d23e,
+                                #a09b0d);
+                                display:grid;
+                                place-items:center;
+                                color:#fff;
+                                font-size:40px;">
+                                ❤
+                            </div>
+
+                        <div class="card-body">
+
+                            <h3>Community Support</h3>
+
+                            <p>Supporting families and communities through practical assistance and sustainable programs.</p>
+
+                        </div>
+
+                    </article>
+
+                
+
+                    <article class="card">
+
+                        <div
+                                class="card-image"
+                                style="
+                                background:linear-gradient(135deg,
+                                #19d23e,
+                                #a09b0d);
+                                display:grid;
+                                place-items:center;
+                                color:#fff;
+                                font-size:40px;">
+                                ❤
+                            </div>
+
+                        <div class="card-body">
+
+                            <h3>Education</h3>
+
+                            <p>Creating opportunities for children and young people through education and skills development.</p>
+
+                        </div>
+
+                    </article>
+
+                
+
+                    <article class="card">
+
+                        <div
+                                class="card-image"
+                                style="
+                                background:linear-gradient(135deg,
+                                #19d23e,
+                                #a09b0d);
+                                display:grid;
+                                place-items:center;
+                                color:#fff;
+                                font-size:40px;">
+                                ❤
+                            </div>
+
+                        <div class="card-body">
+
+                            <h3>Health &amp; Wellbeing</h3>
+
+                            <p>Promoting healthier communities through awareness, support and access to essential services.</p>
+
+                        </div>
+
+                    </article>
+
+                
+
+            </div>
+
+        </div>
+
+    </section>
+    
+
+        
+
+    <section id="projects" class="site-section">
+
+        <div class="site-container">
+
+            <div class="site-section-title">
+
+                <h2>Our Projects</h2>
+
+                <p>
+                    Discover some of the work we are doing with communities.
+                </p>
+
+            </div>
+
+            <div class="cards">
+
+                
+
+                    <article class="card">
+
+                        <div
+                                class="card-image"
+                                style="
+                                background:#edf4ff;
+                                display:grid;
+                                place-items:center;
+                                color:#19d23e;
+                                font-size:40px;">
+                                ✦
+                            </div>
+
+                        <div class="card-body">
+
+                            <h3>Community Development</h3>
+
+                            <p>Working together with communities to create lasting improvements.</p>
+
+                        </div>
+
+                    </article>
+
+                
+
+                    <article class="card">
+
+                        <div
+                                class="card-image"
+                                style="
+                                background:#edf4ff;
+                                display:grid;
+                                place-items:center;
+                                color:#19d23e;
+                                font-size:40px;">
+                                ✦
+                            </div>
+
+                        <div class="card-body">
+
+                            <h3>Youth Empowerment</h3>
+
+                            <p>Helping young people develop skills and opportunities.</p>
+
+                        </div>
+
+                    </article>
+
+                
+
+            </div>
+
+        </div>
+
+    </section>
+    
+
+        
+
+    <section class="site-section alt">
+
+        <div class="site-container">
+
+            <div class="site-section-title">
+
+                <h2>Our Impact</h2>
+
+                <p>
+                    Every contribution and partnership helps us create meaningful change.
+                </p>
+
+            </div>
+
+            <div class="stats">
+
+                
+
+                    <div class="stat">
+
+                        <strong>1,000+</strong>
+
+                        <span>People Supported</span>
+
+                    </div>
+
+                
+
+                    <div class="stat">
+
+                        <strong>25+</strong>
+
+                        <span>Projects</span>
+
+                    </div>
+
+                
+
+                    <div class="stat">
+
+                        <strong>50+</strong>
+
+                        <span>Volunteers</span>
+
+                    </div>
+
+                
+
+                    <div class="stat">
+
+                        <strong>10</strong>
+
+                        <span>Communities</span>
+
+                    </div>
+
+                
+
+            </div>
+
+        </div>
+
+    </section>
+    
+
+        
+
+    <section id="donate" class="site-section">
+
+        <div class="site-container">
+
+            <div class="donation-box">
+
+                <div class="site-section-title" style="margin-bottom:10px">
+
+                    <h2>Support Our Work</h2>
+
+                    <p>Your contribution can help us continue supporting communities and creating opportunities.</p>
+
+                </div>
+
+                <div class="donation-details">
+
+                    
+
+                    
+
+                    
+
+                    <div>
+                        <strong>Currency:</strong>
+                        UGX
+                    </div>
+
+                </div>
+
+                
+
+            </div>
+
+        </div>
+
+    </section>
+    
+
+        
+
+    <section class="site-section alt">
+
+        <div class="site-container">
+
+            <div class="site-section-title">
+
+                <h2>Our Team</h2>
+
+                <p>
+                    Meet the people helping to make our mission possible.
+                </p>
+
+            </div>
+
+            <div class="team-grid">
+
+                
+
+                    <div class="team-card">
+
+                        <div
+                                class="team-photo"
+                                style="
+                                margin-left:auto;
+                                margin-right:auto;
+                                background:#19d23e;
+                                display:grid;
+                                place-items:center;
+                                color:white;
+                                font-size:30px;">
+                                👤
+                            </div>
+
+                        <h3>Jane Doe</h3>
+
+                        <p style="color:#667085;margin-top:5px">
+                            Director
+                        </p>
+
+                    </div>
+
+                
+
+                    <div class="team-card">
+
+                        <div
+                                class="team-photo"
+                                style="
+                                margin-left:auto;
+                                margin-right:auto;
+                                background:#19d23e;
+                                display:grid;
+                                place-items:center;
+                                color:white;
+                                font-size:30px;">
+                                👤
+                            </div>
+
+                        <h3>John Doe</h3>
+
+                        <p style="color:#667085;margin-top:5px">
+                            Program Coordinator
+                        </p>
+
+                    </div>
+
+                
+
+            </div>
+
+        </div>
+
+    </section>
+    
+
+        <section id="news" class="site-section story-section"><div class="site-container">
+ <div class="site-section-title"><h2>Stories & Updates</h2><p>Real stories, recent activities and the impact we are making together.</p></div>
+ <div class="cards story-grid"><article class="card news-card story-card">
+ <div class="story-placeholder">✦</div>
+ <div class="card-body"><span class="story-kicker">STORY 01</span><h3>Welcome To Our Organization</h3><p>Learn more about our work and the communities we support. We operate on principles of transparency, sustainable development, and community involvement.</p>
+ <button type="button" class="story-read" data-title="Welcome To Our Organization" data-story="Learn more about our work and the communities we support. We operate on principles of transparency, sustainable development, and community involvement." data-image="" data-images="" data-video="" data-audio="">Read full story <span>↗</span></button></div></article></div></div></section>
+ <div class="story-modal" aria-hidden="true"><div class="story-modal-panel" role="dialog" aria-modal="true" aria-labelledby="storyModalTitle">
+ <button class="story-modal-close" type="button" aria-label="Close story">×</button><img class="story-modal-image" alt="" hidden>
+ <div class="story-modal-content"><span class="story-kicker">OUR STORY</span><h2 id="storyModalTitle"></h2><p class="story-modal-text"></p><div class="story-modal-gallery" aria-label="Story image gallery"></div><div class="story-modal-video"></div><div class="story-modal-audio"></div></div></div></div>
+
+        
+
+    <section id="contact" class="site-section alt">
+
+        <div class="site-container">
+
+            <div class="site-section-title">
+
+                <h2>Contact Us</h2>
+
+                <p>
+                    We would love to hear from you.
+                </p>
+
+            </div>
+
+            <div class="contact-grid">
+
+                <div class="contact-box">
+
+                    <h3>Get In Touch</h3>
+
+                    <div>
+                        <strong>Email</strong><br>
+                        info@example.org
+                    </div>
+
+                    <div>
+                        <strong>Phone</strong><br>
+                        +256 700 000000
+                    </div>
+
+                    <div>
+                        <strong>Address</strong><br>
+                        Kampala, Uganda
+                    </div>
+
+                </div>
+
+                <div class="contact-box">
+
+                    <h3>Connect With Us</h3>
+
+                    <div>
+
+                        
+
+                        
+
+                        
+
+                        
+
+                        
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+    
+
+        <footer class="site-footer">
+
+            <div class="site-container footer-grid">
+
+                <div>
+
+                    <h3>FFANP</h3>
+
+                    <br>
+
+                    <p>We are committed to creating positive change in our communities by supporting people, protecting vulnerable communities and creating opportunities for a better future.</p>
+
+                </div>
+
+                <div>
+
+                    <h4>Contact</h4>
+
+                    <br>
+
+                    <p>info@example.org</p>
+                    <p>+256 700 000000</p>
+
+                </div>
+
+                <div>
+
+                    <h4>Location</h4>
+
+                    <br>
+
+                    <p>Mbale, Uganda</p>
+
+                </div>
+
+            </div>
+
+            <div class="site-container" style="margin-top:30px;padding-top:20px;border-top:1px solid #263244">
+
+                <p>
+                    © 2026
+                    FFANP.
+                    All rights reserved.
+                </p>
+
+            </div>
+
+        </footer>
+
+    </div>
+    
+<script>
+function storyVideoEmbed(raw){
+ try{
+   const u=new URL(raw);
+   if(!/^https?:$/.test(u.protocol)) return null;
+   const host=u.hostname.toLowerCase().replace(/^www\./,"");
+   let id="";
+   if(host==="youtu.be") id=u.pathname.split("/").filter(Boolean)[0]||"";
+   else if(["youtube.com","m.youtube.com","music.youtube.com"].includes(host)){
+     id=u.searchParams.get("v")||((u.pathname.match(/^\/(?:embed|shorts|live)\/([^/?]+)/)||[])[1]||"");
+   }
+   if(id && /^[A-Za-z0-9_-]{6,}$/.test(id)) return "https://www.youtube-nocookie.com/embed/"+id+"?rel=0&playsinline=1";
+   if(host==="vimeo.com"||host==="player.vimeo.com"){
+     const m=u.pathname.match(/\/(?:video\/)?(\d+)/);
+     if(m) return "https://player.vimeo.com/video/"+m[1];
+   }
+   return null;
+ }catch(e){return null;}
+}
+
+function openStoryModal(button){
+ const root=button.closest(".site")||document;
+ const modal=root.querySelector(".story-modal")||document.querySelector(".story-modal");
+ if(!modal) return;
+ modal.querySelector("#storyModalTitle").textContent=button.dataset.title||"Story";
+ modal.querySelector(".story-modal-text").textContent=button.dataset.story||"";
+ const image=modal.querySelector(".story-modal-image");
+ image.hidden=!button.dataset.image;
+ image.src=button.dataset.image||"";
+ const gallery=modal.querySelector(".story-modal-gallery");
+ gallery.replaceChildren();
+ const imageUrls=(button.dataset.images||"").split(/\r?\n/).map(x=>x.trim()).filter(x=>/^https?:\/\//i.test(x));
+ imageUrls.forEach((url,index)=>{
+   const img=document.createElement("img");
+   img.src=url;
+   img.alt="Story image "+(index+1);
+   img.loading="lazy";
+   img.onerror=()=>img.remove();
+   gallery.appendChild(img);
+ });
+ const video=modal.querySelector(".story-modal-video");
+ const audio=modal.querySelector(".story-modal-audio");
+ video.replaceChildren();
+ audio.replaceChildren();
+ const videoUrl=(button.dataset.video||"").trim();
+ if(/^https?:\/\//i.test(videoUrl)){
+   const embed=storyVideoEmbed(videoUrl);
+   if(embed){
+     const frame=document.createElement("iframe");
+     frame.src=embed;
+     frame.title="Story video";
+     frame.loading="lazy";
+     frame.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+     frame.allowFullscreen=true;
+     video.appendChild(frame);
+   }else{
+     const v=document.createElement("video");
+     v.controls=true;
+     v.preload="metadata";
+     v.src=videoUrl;
+     v.playsInline=true;
+     v.setAttribute("aria-label","Story video");
+     video.appendChild(v);
+   }
+ }
+ const audioUrl=(button.dataset.audio||"").trim();
+ if(/^https?:\/\//i.test(audioUrl)){
+   const a=document.createElement("audio");
+   a.controls=true;
+   a.preload="metadata";
+   a.src=audioUrl;
+   a.setAttribute("aria-label","Story audio");
+   audio.appendChild(a);
+ }
+ modal.classList.add("is-open");
+ modal.setAttribute("aria-hidden","false");
+ document.body.classList.add("story-modal-open");
+ modal.querySelector(".story-modal-close").focus();
+}
+
+function closeStoryModal(){
+ document.querySelectorAll(".story-modal.is-open").forEach(modal=>{
+   modal.classList.remove("is-open");
+   modal.setAttribute("aria-hidden","true");
+   modal.querySelectorAll("video,audio,iframe").forEach(m=>{
+     if(m.tagName==="IFRAME"){ m.src="about:blank"; }
+     else{ m.pause(); m.removeAttribute("src"); m.load(); }
+   });
+ });
+ document.body.classList.remove("story-modal-open");
+}
+
+document.addEventListener("click", function(e){
+  const readBtn = e.target.closest(".story-read");
+  if(readBtn){ openStoryModal(readBtn); return; }
+  const closeBtn = e.target.closest(".story-modal-close");
+  if(closeBtn || e.target.classList.contains("story-modal")){ closeStoryModal(); }
+});
+document.addEventListener("keydown", function(e){ if(e.key==="Escape") closeStoryModal(); });
+</script>
+</body>
+</html>
